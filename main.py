@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Docstring """
 import random
 
 
@@ -16,6 +17,7 @@ symbol_count = {
     "D": 8
 }
 
+# #Docstring
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
     for symbol, symbol_count in symbols.items():
@@ -26,20 +28,23 @@ def get_slot_machine_spin(rows, cols, symbols):
     for _ in range(cols):
         column = []
         current_symbols = all_symbols[:]
-        for _ in range(rows):
-            value = random.choice(all_symbols)
-            current_symbols.remove(value)
-            column.append(value)
+    for _ in range(rows):
+        value = random.choice(all_symbols)
+        current_symbols.remove(value)
+        column.append(value)
         columns.append(column)
     return columns
 
-def print_slot_machine():
+
+def print_slot_machine(columns):
     for row in range(len(columns[0])):
         for i, column in enumerate(columns):
             if i != len(columns) - 1:
                 print(column[row], "|")
             else:
                 print(column[row])
+        print()
+
 
 def deposit():
     while True:
@@ -53,6 +58,7 @@ def deposit():
 
     return amount
 
+
 def get_number_of_lines():
     while True:
         lines = input("Enter the number of lines to bet on(1-" + str(MAX_LINES) + ")? ")
@@ -64,6 +70,7 @@ def get_number_of_lines():
                 print("Enter a valid number of lines.")
 
     return lines
+
 
 def get_bet():
     while True:
