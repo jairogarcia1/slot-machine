@@ -24,58 +24,6 @@ symbol_multiplier = {
     "Q": 4,
     "J": 3
 }
-# returns a count for winnings and the list of winning lines
-def all_winnings(columns, lines, bet, values):
-    winnings = 0
-    winning_lines = []
-    for line in range(lines):
-        #transpose we have columns not all rows
-        symbol = columns[0][line]
-        for column in columns:
-            symbol_to_check = column[line]
-            if symbol != symbol_to_check:
-                break
-        else:
-            winnings += multiplier[symbol] * bet # per line
-            winning_lines.append(line + 1)
-
-    return winnings, winning_lines
-
-
-def get_columns(rows, cols, symbols):
-    all_symbols = []
-    #loops through both key and values
-    for symbol, symbol_quantity in symbols.items():
-        #appends the symbols+quanities to the list
-        for _ in range(symbol_quantity):
-            all_symbols.append(symbol)
-
-    columns = []
-
-    for _ in range(cols):
-        column = []
-        # : used to make a "copy" (not reference) of all_symbols
-        current_symbols = all_symbols[:]
-        for _ in range(rows):
-            value = random.choice(current_symbols)
-            current_symbols.remove(value)
-            column.append(value)
-        columns.append(column)
-
-    return columns
-
-# prints transpose of rows and columns to look like slots in a machine
-# uses enumerate to
-def print_slots(columns):
-    for row in range(len(columns[0])):
-        # enumerate gives the index + column
-        for i, column in enumerate(columns):
-            # if its not equal to last index print pipe
-            if i != len(columns) - 1:
-                print(column[row], end=" | ") # end with pipe
-            else:
-                print(column[row], end="")
-        print()
 
 # takes user input for the amount deposit checks for digits and
 # returns the amount of deposit
@@ -123,6 +71,57 @@ def take_bet():
 
     return amount
 
+def get_columns(rows, cols, symbols):
+    all_symbols = []
+    #loops through both key and values
+    for symbol, symbol_quantity in symbols.items():
+        #appends the symbols+quanities to the list
+        for _ in range(symbol_quantity):
+            all_symbols.append(symbol)
+
+    columns = []
+
+    for _ in range(cols):
+        column = []
+        # : used to make a "copy" (not reference) of all_symbols
+        current_symbols = all_symbols[:]
+        for _ in range(rows):
+            value = random.choice(current_symbols)
+            current_symbols.remove(value)
+            column.append(value)
+        columns.append(column)
+
+    return columns
+
+# prints transpose of rows and columns to look like slots in a machine
+# uses enumerate to
+def print_slots(columns):
+    for row in range(len(columns[0])):
+        # enumerate gives the index + column
+        for i, column in enumerate(columns):
+            # if its not equal to last index print pipe
+            if i != len(columns) - 1:
+                print(column[row], end=" | ") # end with pipe
+            else:
+                print(column[row], end="")
+        print()
+
+# returns a count for winnings and the list of winning lines
+def all_winnings(columns, lines, bet, values):
+    winnings = 0
+    winning_lines = []
+    for line in range(lines):
+        #transpose we have columns not all rows
+        symbol = columns[0][line]
+        for column in columns:
+            symbol_to_check = column[line]
+            if symbol != symbol_to_check:
+                break
+        else:
+            winnings += multiplier[symbol] * bet # per line
+            winning_lines.append(line + 1)
+
+    return winnings, winning_lines
 
 # verifies the balance is greater than bet, prints the slots
 # and winnings if there are any
