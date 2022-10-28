@@ -1,27 +1,26 @@
 #!/usr/bin/env python3
-""" Docstring """
+""" Jgarcia | Slot Machine | accepts deposit from the user and takes bets from 1 - MAX_LINES"""
 import random
 
-
 # Global Variables
-MAX_LINES = 3
 MAX_BET = 100
 MIN_BET = 1
+MAX_LINES = 3
 ROWS = 3
 COLS = 3
 
 symbol_count = {
-    "A": 2,
-    "B": 4,
-    "C": 6,
-    "D": 8
+    "♠": 4,
+    "♦": 6,
+    "♣": 8,
+    "♥": 10
 }
 
 symbol_value = {
-    "A": 5,
-    "B": 4,
-    "C": 3,
-    "D": 2
+    "♠": 6,
+    "♦": 5,
+    "♣": 4,
+    "♥": 3
 }
 
 def check_winnings(columns, lines, bet, values):
