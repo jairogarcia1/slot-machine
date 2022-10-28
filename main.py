@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Jgarcia | Slot Machine | accepts deposit from the user and takes bets from 1 - MAX_LINES"""
+""" Author: Jgarcia | Title: Slot Machine | Purpose: accepts deposit from the user and takes bets from 1 - MAX_LINES"""
 import random
 
 # Global Variables
@@ -9,21 +9,22 @@ MAX_LINES = 3
 ROWS = 3
 COLS = 3
 
+
 symbol_count = {
-    "♠": 4,
-    "♦": 6,
-    "♣": 8,
-    "♥": 10
+    "A": 4,
+    "K": 6,
+    "Q": 8,
+    "J": 10
 }
 
 symbol_value = {
-    "♠": 6,
-    "♦": 5,
-    "♣": 4,
-    "♥": 3
+    "A": 6,
+    "K": 5,
+    "Q": 4,
+    "J": 3
 }
-
-def check_winnings(columns, lines, bet, values):
+# returns a count for winnings and the list of winning lines
+def all_winnings(columns, lines, bet, values):
     winnings = 0
     winning_lines = []
     for line in range(lines):
@@ -39,14 +40,15 @@ def check_winnings(columns, lines, bet, values):
     return winnings, winning_lines
 
 
-#Docstring
-def get_slot_machine_spin(rows, cols, symbols):
+# returns the column after the spin
+def get_symbols(rows, cols, symbols):
     all_symbols = []
     for symbol, symbol_count in symbols.items():
         for _ in range(symbol_count):
             all_symbols.append(symbol)
 
     columns = []
+
     for _ in range(cols):
         column = []
         current_symbols = all_symbols[:]
@@ -58,8 +60,9 @@ def get_slot_machine_spin(rows, cols, symbols):
 
     return columns
 
-# #Docstring
-def print_slot_machine(columns):
+# prints transpose of rows and columns to look like slots in a machine
+# uses enumerate to
+def print_slots(columns):
     for row in range(len(columns[0])):
         for i, column in enumerate(columns):
             if i != len(columns) - 1:
@@ -68,8 +71,9 @@ def print_slot_machine(columns):
                 print(column[row], end="")
         print()
 
-
-def deposit():#Docstring
+# takes user input for the amount deposit checks for digits and
+# returns the amount of deposit
+def deposit():
     while True:
         amount = input("What would you like to deposit? $")
         if amount.isdigit():
@@ -83,8 +87,9 @@ def deposit():#Docstring
 
     return amount
 
-
-def get_number_of_lines():
+# takes input from the user on how many lines to place bets on,
+# checks for digits and line range then returns # of lines
+def get_lines():
     while True:
         lines = input("Enter the number of lines to bet on (1-" + str(MAX_LINES) + ")? ")
         if lines.isdigit():
@@ -96,8 +101,8 @@ def get_number_of_lines():
 
     return lines
 
-
-def get_bet():
+# takes the amount for bet per line, checks for int and MAX/MIN bet limit, and returns that amount
+def take_bet():
     while True:
         amount = input("What would you like to bet on each line? $")
         if amount.isdigit():
@@ -111,10 +116,12 @@ def get_bet():
 
     return amount
 
+
+# verifies the balance is greater than bet, prints the slots and winnings if there are any
 def spin(balance):
-    lines = get_number_of_lines()
+    lines = get_lines()
     while True:
-        bet = get_bet()
+        bet = take_bet()
         total_bet = bet * lines
 
         if total_bet > balance:
@@ -124,13 +131,14 @@ def spin(balance):
 
     print(f"You are betting ${bet} on {lines} lines. Total bet is equal to: ${total_bet}.")
 
-    slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
-    print_slot_machine(slots)
-    winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
+    slots = get_symbols(ROWS, COLS, symbol_count)
+    print_slots(slots)
+    winnings, winning_lines = all_winnings(slots, lines, bet, symbol_value)
     print(f"You won ${winnings}.")
     print(f"You won on lines: ", *winning_lines)
     return winnings - total_bet
 
+# main runs a while loop to continue the game until there is no more balance
 def main():
     balance = deposit()
     while True:
