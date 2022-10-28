@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" Author: Jgarcia | Title: Slot Machine | Purpose: accepts deposit from the user and takes bets from 1 - MAX_LINES"""
+""" Author: Jgarcia | Title: Slot Machine |
+Purpose: accepts deposit from the user and takes bets from 1 - MAX_LINES"""
 import random
 
 # Global Variables
@@ -10,14 +11,14 @@ ROWS = 3
 COLS = 3
 
 
-symbol_count = {
+symbol_quantity = {
     "A": 4,
     "K": 6,
     "Q": 8,
     "J": 10
 }
 
-symbol_value = {
+symbol_multiplier = {
     "A": 6,
     "K": 5,
     "Q": 4,
@@ -28,29 +29,32 @@ def all_winnings(columns, lines, bet, values):
     winnings = 0
     winning_lines = []
     for line in range(lines):
+        #transpose we have columns not all rows
         symbol = columns[0][line]
         for column in columns:
             symbol_to_check = column[line]
             if symbol != symbol_to_check:
                 break
         else:
-            winnings += values[symbol] * bet
+            winnings += multiplier[symbol] * bet # per line
             winning_lines.append(line + 1)
 
     return winnings, winning_lines
 
 
-# returns the column after the spin
-def get_symbols(rows, cols, symbols):
+def get_columns(rows, cols, symbols):
     all_symbols = []
-    for symbol, symbol_count in symbols.items():
-        for _ in range(symbol_count):
+    #loops through both key and values
+    for symbol, symbol_quantity in symbols.items():
+        #appends the symbols+quanities to the list
+        for _ in range(symbol_quantity):
             all_symbols.append(symbol)
 
     columns = []
 
     for _ in range(cols):
         column = []
+        # : used to make a "copy" (not reference) of all_symbols
         current_symbols = all_symbols[:]
         for _ in range(rows):
             value = random.choice(current_symbols)
@@ -64,9 +68,11 @@ def get_symbols(rows, cols, symbols):
 # uses enumerate to
 def print_slots(columns):
     for row in range(len(columns[0])):
+        # enumerate gives the index + column
         for i, column in enumerate(columns):
+            # if its not equal to last index print pipe
             if i != len(columns) - 1:
-                print(column[row], end=" | ")
+                print(column[row], end=" | ") # end with pipe
             else:
                 print(column[row], end="")
         print()
@@ -91,7 +97,7 @@ def deposit():
 # checks for digits and line range then returns # of lines
 def get_lines():
     while True:
-        lines = input("Enter the number of lines to bet on (1-" + str(MAX_LINES) + ")? ")
+        lines = input(f"Enter the number of lines to bet on (1-{MAX_LINES})? ")
         if lines.isdigit():
             lines = int(lines)
             if 1 <= lines <= MAX_LINES:
@@ -101,7 +107,8 @@ def get_lines():
 
     return lines
 
-# takes the amount for bet per line, checks for int and MAX/MIN bet limit, and returns that amount
+# takes the amount for bet per line, checks for int and MAX/MIN bet limit,
+# and returns that amount
 def take_bet():
     while True:
         amount = input("What would you like to bet on each line? $")
@@ -117,7 +124,8 @@ def take_bet():
     return amount
 
 
-# verifies the balance is greater than bet, prints the slots and winnings if there are any
+# verifies the balance is greater than bet, prints the slots
+# and winnings if there are any
 def spin(balance):
     lines = get_lines()
     while True:
@@ -131,9 +139,9 @@ def spin(balance):
 
     print(f"You are betting ${bet} on {lines} lines. Total bet is equal to: ${total_bet}.")
 
-    slots = get_symbols(ROWS, COLS, symbol_count)
+    slots = get_columns(ROWS, COLS, symbol_quantity)
     print_slots(slots)
-    winnings, winning_lines = all_winnings(slots, lines, bet, symbol_value)
+    winnings, winning_lines = all_winnings(slots, lines, bet, symbol_multiplier)
     print(f"You won ${winnings}.")
     print(f"You won on lines: ", *winning_lines)
     return winnings - total_bet
