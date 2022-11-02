@@ -19,14 +19,13 @@ symbol_quantity = {
 }
 
 symbol_multiplier = {
-    "A": 6,
-    "K": 5,
-    "Q": 4,
-    "J": 3
+    "A": 5,
+    "K": 4,
+    "Q": 3,
+    "J": 2
 }
 
-# takes user input for the amount deposit checks for digits and
-# returns the amount of deposit
+"""checks isdigits, converts to int, returns if amount > 0"""
 def deposit():
     while True:
         amount = input("What would you like to deposit? $")
@@ -41,8 +40,7 @@ def deposit():
 
     return amount
 
-# takes input from the user on how many lines to place bets on,
-# checks for digits and line range then returns # of lines
+""" checks isdigits, converts to int, and returns lines if line is between range """
 def get_lines():
     while True:
         lines = input(f"Enter the number of lines to bet on (1-{MAX_LINES})? ")
@@ -55,8 +53,7 @@ def get_lines():
 
     return lines
 
-# takes the amount for bet per line, checks for int and MAX/MIN bet limit,
-# and returns that amount
+""" checks if input isdigit, converts to int, ruturns if bet is between range """
 def take_bet():
     while True:
         amount = input("What would you like to bet on each line? $")
@@ -71,6 +68,9 @@ def take_bet():
 
     return amount
 
+""" creates a lists of all possible symbols, then creates a copy of the full list and removes/appends
+ to new list "columns" used return the columns for display """
+
 def get_columns(rows, cols, symbols):
     all_symbols = []
     #loops through both key and values
@@ -80,10 +80,9 @@ def get_columns(rows, cols, symbols):
             all_symbols.append(symbol)
 
     columns = []
-
     for _ in range(cols):
         column = []
-        # : used to make a "copy" (not reference) of all_symbols
+        # : used to make a "copy" (not reference) of [all_symbols]
         current_symbols = all_symbols[:]
         for _ in range(rows):
             value = random.choice(current_symbols)
@@ -93,11 +92,10 @@ def get_columns(rows, cols, symbols):
 
     return columns
 
-# prints transpose of rows and columns to look like slots in a machine
-# uses enumerate to
+""" uses a for loop to transpose and print the columns out to the right divided with a pipe """
 def print_slots(columns):
     for row in range(len(columns[0])):
-        # enumerate gives the index + column
+        # enumerate gives the column + index
         for i, column in enumerate(columns):
             # if its not equal to last index print pipe
             if i != len(columns) - 1:
@@ -106,12 +104,13 @@ def print_slots(columns):
                 print(column[row], end="")
         print()
 
-# returns a count for winnings and the list of winning lines
-def all_winnings(columns, lines, bet, values):
+""" checks if the next symbol in the column matches and if match returns added winnings
+ and winning lines """
+def all_winnings(columns, lines, bet, multiplier):
     winnings = 0
     winning_lines = []
     for line in range(lines):
-        #transpose we have columns not all rows
+        #transpose we have columns
         symbol = columns[0][line]
         for column in columns:
             symbol_to_check = column[line]
@@ -123,8 +122,8 @@ def all_winnings(columns, lines, bet, values):
 
     return winnings, winning_lines
 
-# verifies the balance is greater than bet, prints the slots
-# and winnings if there are any
+""" handles bet can not be less than balance, and provides output of current bet, winnings
+ and winning lines"""
 def spin(balance):
     lines = get_lines()
     while True:
@@ -145,7 +144,7 @@ def spin(balance):
     print(f"You won on lines: ", *winning_lines)
     return winnings - total_bet
 
-# main runs a while loop to continue the game until there is no more balance
+""" handles a option to quit the while loop and the tracks balance """
 def main():
     balance = deposit()
     while True:
